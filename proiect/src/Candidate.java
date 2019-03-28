@@ -1,4 +1,4 @@
-public class Candidate extends Persoana
+public class Candidate extends Person
 {
     private final int id;
     private Grade grade;
@@ -27,15 +27,5 @@ public class Candidate extends Persoana
 
     public String getPhoneNumber() {
         return phoneNumber;
-    }
-
-    public void print()
-    {
-        System.out.println("Name: " + super.getName());
-        System.out.println("CNP: " + super.getCNP());
-        System.out.println("Info Grade: " + grade.getInfoGrade());
-        System.out.println("Math Grade: " + grade.getMathGrade());
-        System.out.println("Email: " + email);
-        System.out.println("Phone Number: " + phoneNumber);
     }
 }
