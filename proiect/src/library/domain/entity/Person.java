@@ -1,3 +1,5 @@
+package library.domain.entity;
+
 public abstract class Person
 {
     private String name;
