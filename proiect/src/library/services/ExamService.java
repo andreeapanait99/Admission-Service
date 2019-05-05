@@ -1,9 +1,14 @@
 package library.services;
 
 import library.configuration.RepositoryConfig;
+import library.domain.AdmissionException;
 import library.domain.entity.Candidate;
 import library.domain.entity.Exam;
 import library.domain.repository.ExamRepository;
+
+import java.util.List;
+
+import static library.domain.ErrorCode.EXAM_NOT_FOUND;
 
 public class ExamService
 {
@@ -20,17 +25,16 @@ public class ExamService
 
     public Exam searchExamByCandidate(Candidate candidate)
     {
-        Exam exams[] = examRepository.getExams();
-        int examsNumber = examRepository.getExamsNumber();
+        List<Exam> exams = examRepository.getExams();
         int i;
-        for (i = 0; i < examsNumber; i++)
+        for (i = 0; i < exams.size(); i++)
         {
-            if (candidate.getId() == exams[i].getCandidate().getId())
+            if (candidate.getId() == exams.get(i).getCandidate().getId())
                 break;
         }
-        if (i == examsNumber) {
-            System.out.println("There was no exam found for candidate with id " + candidate.getId() + "!");
+        if (i == exams.size()) {
+            throw new AdmissionException(EXAM_NOT_FOUND, "Could not find an exam for candidate with id: " + candidate.getId());
         }
-        return exams[i];
+        return exams.get(i);
     }
 }

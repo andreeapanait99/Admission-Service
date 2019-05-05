@@ -2,34 +2,31 @@ package library.domain.repository;
 
 import library.domain.entity.Evaluator;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class EvaluatorRepositoryImpl implements EvaluatorRepository
 {
-    private Evaluator[] evaluators = new Evaluator[50];
-    private int evaluatorsNumber = 0;
+    private List<Evaluator> evaluators = new ArrayList<>();
 
     @Override
-    public Evaluator[] getEvaluators()
+    public List<Evaluator> getEvaluators()
     {
         return evaluators;
     }
 
     @Override
-    public int getEvaluatorsNumber()
-    {
-        return evaluatorsNumber;
-    }
-
-    @Override
     public void addEvaluator(String name, String CNP, String subject)
     {
-        evaluators[evaluatorsNumber] = new Evaluator(name, CNP, this.evaluatorsNumber, subject);
-        this.evaluatorsNumber++;
+        evaluators.add(new Evaluator(name, CNP, evaluators.size(), subject));
     }
 
     @Override
     public void addEvaluator(Evaluator evaluator)
     {
-        evaluators[evaluatorsNumber] = new Evaluator(evaluator.getName(), evaluator.getCNP(), this.evaluatorsNumber, evaluator.getSubject());
-        this.evaluatorsNumber++;
+        evaluators.add(new Evaluator(evaluator.getName(), evaluator.getCNP(), evaluators.size(), evaluator.getSubject()));
     }
+
+    @Override
+    public void readEvaluatorsFromFile(String fileName) {};
 }

@@ -1,8 +1,13 @@
 package library.services;
 
 import library.configuration.RepositoryConfig;
+import library.domain.AdmissionException;
 import library.domain.entity.Evaluator;
 import library.domain.repository.EvaluatorRepository;
+
+import java.util.List;
+
+import static library.domain.ErrorCode.EVALUATOR_NOT_FOUND;
 
 public class EvaluatorService
 {
@@ -19,16 +24,15 @@ public class EvaluatorService
 
     public Evaluator searchEvaluatorById(int id) {
         int i;
-        int evaluatorsNumber = evaluatorRepository.getEvaluatorsNumber();
-        Evaluator[] evaluators = evaluatorRepository.getEvaluators();
-        for (i = 0; i < evaluatorsNumber; i++) {
-            if (evaluators[i].getId() == id)
+        List<Evaluator> evaluators = evaluatorRepository.getEvaluators();
+        for (i = 0; i < evaluators.size(); i++) {
+            if (evaluators.get(i).getId() == id)
                 break;
         }
-        if (i == evaluatorsNumber) {
-            System.out.println("Evaluator with id " + id + " does not exist!");
+        if (i == evaluators.size()) {
+            throw new AdmissionException(EVALUATOR_NOT_FOUND, "Could not find the evaluator with id: " + id);
         }
-        return evaluators[i];
+        return evaluators.get(i);
     }
 
     private String createPattern(String partialUserName) { // example JDo, JoD, JoDo -> for John Doe
@@ -47,13 +51,13 @@ public class EvaluatorService
     }
 
     public String[] searchEvaluatorsByASpecificPattern(String partialEvaluatorName) {
-        Evaluator[] evaluators = evaluatorRepository.getEvaluators();
-        String[] result = new String[evaluators.length];
+        List<Evaluator> evaluators = evaluatorRepository.getEvaluators();
+        String[] result = new String[evaluators.size()];
         int counter = 0;
         String pattern = createPattern(partialEvaluatorName);
-        for (int i = 0; i < evaluators.length; i++) {
-            if (evaluators[i] != null && evaluators[i].getName().matches(pattern)) {
-                result[counter++] = evaluators[i].getName();
+        for (int i = 0; i < evaluators.size(); i++) {
+            if (evaluators.get(i).getName().matches(pattern)) {
+                result[counter++] = evaluators.get(i).getName();
             }
         }
         return result;

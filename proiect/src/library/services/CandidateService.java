@@ -2,15 +2,20 @@ package library.services;
 
 import library.configuration.RepositoryConfig;
 import library.configuration.ToolConfig;
+import library.domain.AdmissionException;
 import library.domain.entity.Candidate;
 import library.domain.repository.CandidateRepository;
+
+import java.util.List;
+
+import static library.domain.ErrorCode.CANDIDATE_NOT_FOUND;
 
 public class CandidateService {
     private static CandidateService instance;
     private ToolConfig toolConfig = ToolConfig.getInstance();
     private CandidateRepository candidateRepository = RepositoryConfig.getInstance().getCandidateRepository();
 
-    public static CandidateService getCandidateService() {
+    public static CandidateService getInstance() {
         if (instance == null) {
             instance = new CandidateService();
         }
@@ -19,16 +24,15 @@ public class CandidateService {
 
     public Candidate searchCandidateById(int id) {
         int i;
-        int candidatesNumber = candidateRepository.getCandidatesNumber();
-        Candidate[] candidates = candidateRepository.getCandidates();
-        for (i = 0; i < candidatesNumber; i++) {
-            if (candidates[i].getId() == id)
+        List<Candidate> candidates = candidateRepository.getCandidates();
+        for (i = 0; i < candidates.size(); i++) {
+            if (candidates.get(i).getId() == id)
                 break;
         }
-        if (i == candidatesNumber) {
-            System.out.println("Candidate with id " + id + " does not exist!");
+        if (i == candidates.size()) {
+            throw new AdmissionException(CANDIDATE_NOT_FOUND, "Could not find the candidate with id: " + id);
         }
-        return candidates[i];
+        return candidates.get(i);
     }
 
     private String createPattern(String partialUserName) { // example JDo, JoD, JoDo -> for John Doe
@@ -47,15 +51,16 @@ public class CandidateService {
     }
 
     public String[] searchCandidatesByASpecificPattern(String partialCandidateName) {
-        Candidate[] candidates = candidateRepository.getCandidates();
-        String[] result = new String[candidates.length];
+        List<Candidate> candidates = candidateRepository.getCandidates();
+        String[] result = new String[candidates.size()];
         int counter = 0;
         String pattern = createPattern(partialCandidateName);
-        for (int i = 0; i < candidates.length; i++) {
-            if (candidates[i] != null && candidates[i].getName().matches(pattern)) {
-                result[counter++] = candidates[i].getName()+ " - " + candidates[i].getId();
+        for (int i = 0; i < candidates.size(); i++) {
+            if (candidates.get(i).getName().matches(pattern)) {
+                result[counter++] = candidates.get(i).getName()+ " - " + candidates.get(i).getId();
             }
         }
         return result;
     }
+
 }

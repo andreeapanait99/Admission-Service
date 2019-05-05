@@ -4,11 +4,11 @@ import library.domain.repository.*;
 
 public class RepositoryConfig
 {
-    private final CandidateRepository candidateRepository = new CandidateRepositoryImpl();
+    private final CandidateRepository candidateRepository = new CandidateRepositoryFileImpl();
 
-    private final EvaluatorRepository evaluatorRepository = new EvaluatorRepositoryImpl();
+    private final EvaluatorRepository evaluatorRepository = new EvaluatorRepositoryFileImpl();
 
-    private final ExamRepository examRepository = new ExamRepositoryImpl();
+    private final ExamRepository examRepository = new ExamRepositoryFileImpl();
 
     private static RepositoryConfig ourInstance = new RepositoryConfig();
 
