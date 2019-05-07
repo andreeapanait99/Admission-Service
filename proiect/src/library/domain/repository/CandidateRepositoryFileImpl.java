@@ -1,6 +1,7 @@
 package library.domain.repository;
 
 import library.domain.entity.Candidate;
+import library.services.AuditService;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -9,29 +10,27 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class CandidateRepositoryFileImpl implements CandidateRepository
-{
+public class CandidateRepositoryFileImpl implements CandidateRepository {
     private List<Candidate> candidates = new ArrayList<>();
+    AuditService auditService = AuditService.getInstance();
 
     @Override
-    public List<Candidate> getCandidates()
-    {
+    public List<Candidate> getCandidates() {
         return candidates;
     }
 
     @Override
-    public void addCandidate(String name, String CNP, double romGrade, double mathGrade, double infoGrade, String email, String phoneNumber)
-    {
+    public void addCandidate(String name, String CNP, double romGrade, double mathGrade, double infoGrade, String email, String phoneNumber) {
         candidates.add(new Candidate(name, CNP, romGrade, mathGrade, infoGrade, candidates.size(), email, phoneNumber));
     }
 
     @Override
-    public void addCandidate(Candidate candidate)
-    {
+    public void addCandidate(Candidate candidate) {
         candidates.add(new Candidate(candidate.getName(), candidate.getCNP(), candidate.getBacGrade().getRomGrade(), candidate.getBacGrade().getMathGrade(), candidate.getBacGrade().getInfoGrade(), candidate.getId(), candidate.getEmail(), candidate.getPhoneNumber()));
     }
 
     public void readCandidatesFromFile(String fileName) {
+        auditService.printAudit("readCandidatesFromFile");
         File file = new File(fileName);
         try {
             FileInputStream fileInputStream = new FileInputStream(file);

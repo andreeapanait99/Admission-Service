@@ -1,6 +1,7 @@
 package library.tools;
 
 import library.domain.entity.Evaluator;
+import library.services.AuditService;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -10,8 +11,11 @@ import java.util.List;
 
 public class EvaluatorPrinter
 {
+    AuditService auditService = AuditService.getInstance();
+
     public void print(Evaluator evaluator)
     {
+        auditService.printAudit("printEvaluator");
         System.out.println("ID: " + evaluator.getId());
         System.out.println("Name: " + evaluator.getName());
         System.out.println("CNP: " + evaluator.getCNP());
@@ -20,6 +24,7 @@ public class EvaluatorPrinter
 
     public void printFile(List<Evaluator> evaluators, String fileName)
     {
+        auditService.printAudit("printEvaluatorsFile");
         File file = new File(fileName);
         try (PrintWriter printWriter = new PrintWriter(new FileWriter(file, false)))
         {

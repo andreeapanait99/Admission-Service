@@ -22,7 +22,7 @@ public class Main
 {
     public static void main(String[] args)
     {
-        String name, cnp, email, phoneNumber, subject, actionName;
+        String name, cnp, email, phoneNumber, subject;
         double infoGrade, mathGrade, romGrade;
         int candidateId, evaluatorId;
         Scanner scanner = new Scanner(System.in);
@@ -32,7 +32,6 @@ public class Main
         RepositoryConfig repositoryConfig = RepositoryConfig.getInstance();
         EvaluatorService evaluatorService = EvaluatorService.getInstance();
         ExamService examService = ExamService.getInstance();
-        AuditService auditService = AuditService.getInstance();
 
         repositoryConfig.getCandidateRepository().readCandidatesFromFile("D:/pao/Admission-Service/proiect/src/library/tools/files/candidates.csv");
         repositoryConfig.getEvaluatorRepository().readEvaluatorsFromFile("D:/pao/Admission-Service/proiect/src/library/tools/files/evaluators.csv");
@@ -54,7 +53,6 @@ public class Main
         int option = scanner.nextInt();
         while (option != 0)
         {
-            actionName = "";
             switch(option)
             {
                 case 1:
@@ -79,7 +77,6 @@ public class Main
                         throw new AdmissionException(INVALID_PHONE_NUMBER, "The phone number entered is not valid!");
                     }
                     repositoryConfig.getCandidateRepository().addCandidate(name, cnp, romGrade, mathGrade, infoGrade, email, phoneNumber);
-                    actionName = "add candidate";
                     break;
                 case 2:
                     List<Candidate> candidates;
@@ -90,8 +87,7 @@ public class Main
                         System.out.println("There are no candidates!");
                         break;
                     }
-                    candidatePrinter.printFile(candidates, "D:/pao/proiect/src/library/tools/files/candidatesOut.csv");
-                    actionName = "display candidates";
+                    candidatePrinter.printFile(candidates, "D:/pao/Admission-Service/proiect/src/library/tools/files/candidatesOut.csv");
                     break;
                 case 3:
                     System.out.println("Enter evaluator name, cnp and subject:");
@@ -100,7 +96,6 @@ public class Main
                     cnp = scanner.nextLine();
                     subject = scanner.nextLine();
                     repositoryConfig.getEvaluatorRepository().addEvaluator(name, cnp, subject);
-                    actionName = "add evaluator";
                     break;
                 case 4:
                     List<Evaluator> evaluators = repositoryConfig.getEvaluatorRepository().getEvaluators();
@@ -110,8 +105,7 @@ public class Main
                         System.out.println("There are no evaluators!");
                         break;
                     }
-                    evaluatorPrinter.printFile(evaluators, "D:/pao/proiect/src/library/tools/files/evaluatorsOut.csv");
-                    actionName = "display evaluators";
+                    evaluatorPrinter.printFile(evaluators, "D:/pao/Admission-Service/proiect/src/library/tools/files/evaluatorsOut.csv");
                     break;
                 case 5:
                     System.out.println("Enter candidate id, math grade, info grade, evaluator 1 and evaluator 2 ids:");
@@ -124,7 +118,6 @@ public class Main
                     evaluatorId = scanner.nextInt();
                     Evaluator evaluator2 = evaluatorService.searchEvaluatorById(evaluatorId);
                     repositoryConfig.getExamRepository().addExam(candidate, mathGrade, infoGrade, evaluator1, evaluator2);
-                    actionName = "add exam";
                     break;
                 case 6:
                     List<Exam> exams = repositoryConfig.getExamRepository().getExams();
@@ -134,8 +127,7 @@ public class Main
                         System.out.println("There are no exams!");
                         break;
                     }
-                    examPrinter.printFile(exams, "D:/pao/proiect/src/library/tools/files/examsOut.csv");
-                    actionName = "display exams";
+                    examPrinter.printFile(exams, "D:/pao/Admission-Service/proiect/src/library/tools/files/examsOut.csv");
                     break;
                 case 7:
                     System.out.println("Enter candidate id:");
@@ -143,7 +135,6 @@ public class Main
                     candidate = candidateService.searchCandidateById(candidateId);
                     System.out.println("Candidate found!");
                     toolConfig.getCandidatePrinter().print(candidate);
-                    actionName = "search candidate by id";
                     break;
                 case 8:
                     System.out.println("Enter candidate name:");
@@ -164,7 +155,6 @@ public class Main
                             i++;
                         }
                     }
-                    actionName = "search candidate by name";
                     break;
                 case 9:
                     System.out.println("Enter evaluator id:");
@@ -173,7 +163,6 @@ public class Main
                     if (evaluator == null) break;
                     System.out.println("Evaluator found!");
                     toolConfig.getEvaluatorPrinter().print(evaluator);
-                    actionName = "search evaluator by id";
                     break;
                 case 10:
                     System.out.println("Enter evaluator name:");
@@ -194,7 +183,6 @@ public class Main
                             i++;
                         }
                     }
-                    actionName = "search evaluator by name";
                     break;
                 case 11:
                     System.out.println("Enter candidate id:");
@@ -203,7 +191,6 @@ public class Main
                     Exam exam = examService.searchExamByCandidate(candidate);
                     System.out.println("Exam found!");
                     toolConfig.getExamPrinter().print(exam);
-                    actionName = "search exam by candidate";
                     break;
                 case 12:
                     candidates = repositoryConfig.getCandidateRepository().getCandidates();
@@ -222,10 +209,8 @@ public class Main
                         candidatePrinter.print(entry.getValue());
                         System.out.println();
                     }
-                    actionName = "display candidates in alphabetical order";
                     break;
             }
-            auditService.printAudit(actionName);
             System.out.println("----------------");
             System.out.println("0 - Stop");
             System.out.println("1 - Add candidate");

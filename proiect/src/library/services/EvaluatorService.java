@@ -12,6 +12,7 @@ import static library.domain.ErrorCode.EVALUATOR_NOT_FOUND;
 public class EvaluatorService
 {
     private EvaluatorRepository evaluatorRepository = RepositoryConfig.getInstance().getEvaluatorRepository();
+    AuditService auditService = AuditService.getInstance();
 
     private static EvaluatorService ourInstance = new EvaluatorService();
 
@@ -23,6 +24,7 @@ public class EvaluatorService
     }
 
     public Evaluator searchEvaluatorById(int id) {
+        auditService.printAudit("searchEvaluatorById");
         int i;
         List<Evaluator> evaluators = evaluatorRepository.getEvaluators();
         for (i = 0; i < evaluators.size(); i++) {
@@ -51,6 +53,7 @@ public class EvaluatorService
     }
 
     public String[] searchEvaluatorsByASpecificPattern(String partialEvaluatorName) {
+        auditService.printAudit("searchEvaluatorsByASpecificPattern");
         List<Evaluator> evaluators = evaluatorRepository.getEvaluators();
         String[] result = new String[evaluators.size()];
         int counter = 0;

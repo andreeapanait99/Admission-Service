@@ -1,6 +1,7 @@
 package library.tools;
 
 import library.domain.entity.Exam;
+import library.services.AuditService;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -10,8 +11,11 @@ import java.util.List;
 
 public class ExamPrinter
 {
+    AuditService auditService = AuditService.getInstance();
+
     public void print(Exam exam)
     {
+        auditService.printAudit("printExam");
         System.out.println("Candidate ID: " + exam.getCandidate().getId());
         System.out.println("Name: " + exam.getCandidate().getName());
         System.out.println("Math grade: " + exam.getMathGrade());
@@ -26,6 +30,7 @@ public class ExamPrinter
 
     public void printFile(List<Exam> exams, String fileName)
     {
+        auditService.printAudit("printExamsFile");
         File file = new File(fileName);
         try (PrintWriter printWriter = new PrintWriter(new FileWriter(file, false)))
         {

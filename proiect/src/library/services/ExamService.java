@@ -13,6 +13,7 @@ import static library.domain.ErrorCode.EXAM_NOT_FOUND;
 public class ExamService
 {
     private static ExamService ourInstance = new ExamService();
+    AuditService auditService = AuditService.getInstance();
 
     public static ExamService getInstance() {
         return ourInstance;
@@ -25,6 +26,7 @@ public class ExamService
 
     public Exam searchExamByCandidate(Candidate candidate)
     {
+        auditService.printAudit("searchExamByCandidate");
         List<Exam> exams = examRepository.getExams();
         int i;
         for (i = 0; i < exams.size(); i++)

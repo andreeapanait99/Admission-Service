@@ -1,6 +1,7 @@
 package library.tools;
 
 import library.domain.entity.Candidate;
+import library.services.AuditService;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -10,8 +11,11 @@ import java.util.List;
 
 public class CandidatePrinter
 {
+    AuditService auditService = AuditService.getInstance();
+
     public void print(Candidate candidate)
     {
+        auditService.printAudit("printCandidates");
         System.out.println("ID: " + candidate.getId());
         System.out.println("Name: " + candidate.getName());
         System.out.println("CNP: " + candidate.getCNP());
@@ -25,6 +29,7 @@ public class CandidatePrinter
 
     public void printFile(List<Candidate> candidates, String fileName)
     {
+        auditService.printAudit("printCandidatesFile");
         File file = new File(fileName);
         try (PrintWriter printWriter = new PrintWriter(new FileWriter(file, false)))
         {

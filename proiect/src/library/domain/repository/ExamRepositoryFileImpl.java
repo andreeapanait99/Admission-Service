@@ -3,6 +3,7 @@ package library.domain.repository;
 import library.domain.entity.Candidate;
 import library.domain.entity.Evaluator;
 import library.domain.entity.Exam;
+import library.services.AuditService;
 import library.services.CandidateService;
 import library.services.EvaluatorService;
 
@@ -16,6 +17,7 @@ import java.util.Scanner;
 public class ExamRepositoryFileImpl implements ExamRepository
 {
     private List<Exam> exams  = new ArrayList<>();
+    AuditService auditService = AuditService.getInstance();
 
     @Override
     public List<Exam> getExams()
@@ -39,6 +41,7 @@ public class ExamRepositoryFileImpl implements ExamRepository
     @Override
     public void readExamsFromFile(String fileName)
     {
+        auditService.printAudit("readExamsFromFile");
         File file = new File(fileName);
         try {
             FileInputStream fileInputStream = new FileInputStream(file);

@@ -14,6 +14,7 @@ public class CandidateService {
     private static CandidateService instance;
     private ToolConfig toolConfig = ToolConfig.getInstance();
     private CandidateRepository candidateRepository = RepositoryConfig.getInstance().getCandidateRepository();
+    private AuditService auditService = AuditService.getInstance();
 
     public static CandidateService getInstance() {
         if (instance == null) {
@@ -23,6 +24,7 @@ public class CandidateService {
     }
 
     public Candidate searchCandidateById(int id) {
+        auditService.printAudit("searchCandidateById");
         int i;
         List<Candidate> candidates = candidateRepository.getCandidates();
         for (i = 0; i < candidates.size(); i++) {
@@ -51,6 +53,7 @@ public class CandidateService {
     }
 
     public String[] searchCandidatesByASpecificPattern(String partialCandidateName) {
+        auditService.printAudit("searchCandidatesByASpecificPattern");
         List<Candidate> candidates = candidateRepository.getCandidates();
         String[] result = new String[candidates.size()];
         int counter = 0;

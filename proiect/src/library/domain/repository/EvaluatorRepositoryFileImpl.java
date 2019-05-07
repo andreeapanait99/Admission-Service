@@ -2,6 +2,7 @@ package library.domain.repository;
 
 import library.domain.entity.Candidate;
 import library.domain.entity.Evaluator;
+import library.services.AuditService;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -13,6 +14,7 @@ import java.util.Scanner;
 public class EvaluatorRepositoryFileImpl implements EvaluatorRepository
 {
     private List<Evaluator> evaluators = new ArrayList<>();
+    AuditService auditService = AuditService.getInstance();
 
     @Override
     public List<Evaluator> getEvaluators()
@@ -35,6 +37,7 @@ public class EvaluatorRepositoryFileImpl implements EvaluatorRepository
     @Override
     public void readEvaluatorsFromFile(String fileName)
     {
+        auditService.printAudit("readEvaluatorsFromFile");
         File file = new File(fileName);
         try {
             FileInputStream fileInputStream = new FileInputStream(file);
