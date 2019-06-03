@@ -1,16 +1,24 @@
 package library.services;
 
+import library.configuration.ConnectionFactory;
 import library.configuration.RepositoryConfig;
 import library.domain.AdmissionException;
 import library.domain.entity.Evaluator;
 import library.domain.repository.EvaluatorRepository;
+import library.tools.DataExtractor;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 
 import static library.domain.ErrorCode.EVALUATOR_NOT_FOUND;
 
 public class EvaluatorService
 {
+    private static final String GET_EVALUATOR_BY_ID = "SELECT * FROM evaluators WHERE id=?";
+
     private EvaluatorRepository evaluatorRepository = RepositoryConfig.getInstance().getEvaluatorRepository();
     AuditService auditService = AuditService.getInstance();
 
@@ -35,6 +43,19 @@ public class EvaluatorService
             throw new AdmissionException(EVALUATOR_NOT_FOUND, "Could not find the evaluator with id: " + id);
         }
         return evaluators.get(i);
+    }
+
+    public Evaluator getEvaluatorById(int id) {
+        auditService.printAudit("getEvaluatorByIdDB");
+        try (Connection connection = ConnectionFactory.getConnection()) {
+            PreparedStatement stmt = connection.prepareStatement(GET_EVALUATOR_BY_ID);
+            stmt.setInt(1, id);
+            ResultSet rs = stmt.executeQuery();
+            return DataExtractor.extractSingleEvaluatorFrom(rs);
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return null;
     }
 
     private String createPattern(String partialUserName) { // example JDo, JoD, JoDo -> for John Doe

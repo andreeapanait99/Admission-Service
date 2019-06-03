@@ -10,7 +10,7 @@ public interface CandidateRepository
 
     public void addCandidate(Candidate candidate);
 
-    public void addCandidate(String name, String CNP, double romGrade, double mathGrade, double infoGrade, String email, String phoneNumber);
+    public void addCandidate(String name, String CNP, int id, double romGrade, double mathGrade, double infoGrade, String email, String phoneNumber);
 
     public void readCandidatesFromFile(String fileName);
 }

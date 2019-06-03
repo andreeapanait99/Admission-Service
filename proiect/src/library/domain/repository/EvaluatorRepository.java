@@ -10,7 +10,7 @@ public interface EvaluatorRepository
 
     public void addEvaluator(Evaluator evaluator);
 
-    public void addEvaluator(String name, String CNP, String subject);
+    public void addEvaluator(String name, String CNP, int id, String subject);
 
     public void readEvaluatorsFromFile(String fileName);
 }

@@ -1,3 +1,6 @@
+import com.sun.glass.ui.Application;
+import library.configuration.ConnectionFactory;
+import library.configuration.DatabaseSetup;
 import library.configuration.RepositoryConfig;
 import library.configuration.ToolConfig;
 import library.domain.AdmissionException;
@@ -13,6 +16,8 @@ import library.tools.EvaluatorPrinter;
 import library.tools.ExamPrinter;
 import library.tools.TestData;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.*;
 
 import static library.domain.ErrorCode.INVALID_EMAIL;
@@ -22,9 +27,13 @@ public class Main
 {
     public static void main(String[] args)
     {
+        DatabaseSetup databaseSetup = new DatabaseSetup();
+        databaseSetup.initDatabase();
+
+
         String name, cnp, email, phoneNumber, subject;
         double infoGrade, mathGrade, romGrade;
-        int candidateId, evaluatorId;
+        int candidateId, evaluatorId, id;
         Scanner scanner = new Scanner(System.in);
         System.out.println("Welcome to our Admission Service!");
         CandidateService candidateService = CandidateService.getInstance();
@@ -56,10 +65,11 @@ public class Main
             switch(option)
             {
                 case 1:
-                    System.out.println("Enter candidate name, cnp, Bac grades (rom, math, info), email and phone number:");
+                    System.out.println("Enter candidate name, cnp, id, Bac grades (rom, math, info), email and phone number:");
                     scanner.nextLine();
                     name = scanner.nextLine();
                     cnp = scanner.nextLine();
+                    id = scanner.nextInt();
                     romGrade = scanner.nextDouble();
                     mathGrade = scanner.nextDouble();
                     infoGrade = scanner.nextDouble();
@@ -76,7 +86,7 @@ public class Main
                     {
                         throw new AdmissionException(INVALID_PHONE_NUMBER, "The phone number entered is not valid!");
                     }
-                    repositoryConfig.getCandidateRepository().addCandidate(name, cnp, romGrade, mathGrade, infoGrade, email, phoneNumber);
+                    repositoryConfig.getCandidateRepository().addCandidate(name, cnp, id, romGrade, mathGrade, infoGrade, email, phoneNumber);
                     break;
                 case 2:
                     List<Candidate> candidates;
@@ -90,12 +100,13 @@ public class Main
                     candidatePrinter.printFile(candidates, "D:/pao/Admission-Service/proiect/src/library/tools/files/candidatesOut.csv");
                     break;
                 case 3:
-                    System.out.println("Enter evaluator name, cnp and subject:");
+                    System.out.println("Enter evaluator name, cnp, id and subject:");
                     scanner.nextLine();
                     name = scanner.nextLine();
                     cnp = scanner.nextLine();
+                    id = scanner.nextInt();
                     subject = scanner.nextLine();
-                    repositoryConfig.getEvaluatorRepository().addEvaluator(name, cnp, subject);
+                    repositoryConfig.getEvaluatorRepository().addEvaluator(name, cnp, id, subject);
                     break;
                 case 4:
                     List<Evaluator> evaluators = repositoryConfig.getEvaluatorRepository().getEvaluators();
@@ -132,7 +143,7 @@ public class Main
                 case 7:
                     System.out.println("Enter candidate id:");
                     candidateId = scanner.nextInt();
-                    candidate = candidateService.searchCandidateById(candidateId);
+                    candidate = candidateService.getCandidateById(candidateId);
                     System.out.println("Candidate found!");
                     toolConfig.getCandidatePrinter().print(candidate);
                     break;
@@ -159,7 +170,7 @@ public class Main
                 case 9:
                     System.out.println("Enter evaluator id:");
                     evaluatorId = scanner.nextInt();
-                    Evaluator evaluator = evaluatorService.searchEvaluatorById(evaluatorId);
+                    Evaluator evaluator = evaluatorService.getEvaluatorById(evaluatorId);
                     if (evaluator == null) break;
                     System.out.println("Evaluator found!");
                     toolConfig.getEvaluatorPrinter().print(evaluator);
@@ -187,8 +198,8 @@ public class Main
                 case 11:
                     System.out.println("Enter candidate id:");
                     candidateId = scanner.nextInt();
-                    candidate = candidateService.searchCandidateById(candidateId);
-                    Exam exam = examService.searchExamByCandidate(candidate);
+                    candidate = candidateService.getCandidateById(candidateId);
+                    Exam exam = examService.getExamByCandidate(candidate);
                     System.out.println("Exam found!");
                     toolConfig.getExamPrinter().print(exam);
                     break;

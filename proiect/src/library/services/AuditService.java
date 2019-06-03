@@ -24,7 +24,8 @@ public class AuditService
         try (PrintWriter printWriter = new PrintWriter(new FileWriter(file, true)))
         {
             Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-            printWriter.println(actionName + " " + timestamp);
+            Thread t = Thread.currentThread();
+            printWriter.println(actionName + " " + timestamp + " " + t.getName());
         }
         catch (IOException e)
         {

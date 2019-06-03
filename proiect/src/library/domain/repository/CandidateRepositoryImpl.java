@@ -16,7 +16,7 @@ public class CandidateRepositoryImpl implements CandidateRepository
     }
 
     @Override
-    public void addCandidate(String name, String CNP, double romGrade, double mathGrade, double infoGrade, String email, String phoneNumber)
+    public void addCandidate(String name, String CNP, int id, double romGrade, double mathGrade, double infoGrade, String email, String phoneNumber)
     {
         candidates.add(new Candidate(name, CNP, romGrade, mathGrade, infoGrade, candidates.size(), email, phoneNumber));
     }

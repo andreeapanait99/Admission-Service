@@ -23,7 +23,7 @@ public class EvaluatorRepositoryFileImpl implements EvaluatorRepository
     }
 
     @Override
-    public void addEvaluator(String name, String CNP, String subject)
+    public void addEvaluator(String name, String CNP, int id, String subject)
     {
         evaluators.add(new Evaluator(name, CNP, evaluators.size(), subject));
     }
