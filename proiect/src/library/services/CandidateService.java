@@ -18,6 +18,8 @@ import static library.domain.ErrorCode.CANDIDATE_NOT_FOUND;
 
 public class CandidateService {
     private static final String GET_CANDIDATE_BY_ID = "SELECT * FROM candidates WHERE id=?";
+    private static final String DELETE_CANDIDATE = "DELETE FROM candidates WHERE id=?";
+    private static final String UPDATE_CANDIDATE_NAME = "UPDATE candidates SET name=? WHERE id=?";
 
     private static CandidateService instance;
     private ToolConfig toolConfig = ToolConfig.getInstance();
@@ -87,4 +89,28 @@ public class CandidateService {
         return result;
     }
 
+    public void deleteCandidate(int candidateId)
+    {
+        auditService.printAudit("deleteCandidateDB");
+        try (Connection connection = ConnectionFactory.getConnection()) {
+            PreparedStatement stmt = connection.prepareStatement(DELETE_CANDIDATE);
+            stmt.setInt(1, candidateId);
+            stmt.executeUpdate();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public void updateCandidateName(int candidateId, String updatedName)
+    {
+        auditService.printAudit("updateCandidateNameDB");
+        try (Connection connection = ConnectionFactory.getConnection()) {
+            PreparedStatement stmt = connection.prepareStatement(UPDATE_CANDIDATE_NAME);
+            stmt.setString(1, updatedName);
+            stmt.setInt(2, candidateId);
+            stmt.executeUpdate();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
 }

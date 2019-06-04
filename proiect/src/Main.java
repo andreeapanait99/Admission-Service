@@ -30,12 +30,13 @@ public class Main
         DatabaseSetup databaseSetup = new DatabaseSetup();
         databaseSetup.initDatabase();
 
-
         String name, cnp, email, phoneNumber, subject;
         double infoGrade, mathGrade, romGrade;
         int candidateId, evaluatorId, id;
         Scanner scanner = new Scanner(System.in);
+
         System.out.println("Welcome to our Admission Service!");
+
         CandidateService candidateService = CandidateService.getInstance();
         ToolConfig toolConfig = ToolConfig.getInstance();
         RepositoryConfig repositoryConfig = RepositoryConfig.getInstance();
@@ -59,6 +60,8 @@ public class Main
         System.out.println("10 - Search evaluator by name");
         System.out.println("11 - Show exam results for certain candidate");
         System.out.println("12 - Display candidates in alphabetical order");
+        System.out.println("13 - Delete candidate");
+        System.out.println("14 - Update candidate name");
         int option = scanner.nextInt();
         while (option != 0)
         {
@@ -221,6 +224,20 @@ public class Main
                         System.out.println();
                     }
                     break;
+                case 13:
+                    System.out.println("Enter candidate id:");
+                    id = scanner.nextInt();
+                    candidateService.deleteCandidate(id);
+                    System.out.println("Candidate with id " + id + " deleted!");
+                    break;
+                case 14:
+                    System.out.println("Enter candidate id:");
+                    id = scanner.nextInt();
+                    scanner.nextLine();
+                    name = scanner.nextLine();
+                    candidateService.updateCandidateName(id, name);
+                    System.out.println("Candidate with id " + id + " updated (new name: " + name + ")!");
+                    break;
             }
             System.out.println("----------------");
             System.out.println("0 - Stop");
@@ -236,6 +253,8 @@ public class Main
             System.out.println("10 - Search evaluator by name");
             System.out.println("11 - Show exam results for certain candidate");
             System.out.println("12 - Display candidates in alphabetical order");
+            System.out.println("13 - Delete candidate");
+            System.out.println("14 - Update candidate name");
             option = scanner.nextInt();
         }
     }
